@@ -178,14 +178,14 @@ get_named_type(t::CXType) = clang_Type_getNamedType(t)
 get_named_type(t::CLElaborated)::CLType = clang_Type_getNamedType(t)
 
 ## TODO:
-# clang_Type_isTransparentTagTypedef
+# clang_Type_isTransparentTagTypedef (ObjectiveC)
 # clang_Type_getAlignOf
-# clang_Type_getClassType
+# clang_Type_getClassType (C++)
 # clang_Type_getSizeOf
 # clang_Type_getOffsetOf
-# clang_Type_getNumTemplateArguments
-# clang_Type_getTemplateArgumentAsType
-# clang_Type_getCXXRefQualifier
+# clang_Type_getNumTemplateArguments (C++)
+# clang_Type_getTemplateArgumentAsType (C++)
+# clang_Type_getCXXRefQualifier (C++)
 #
 
 # helper

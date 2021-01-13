@@ -84,8 +84,13 @@ getcursor(tu::TranslationUnit)::CLCursor = clang_getTranslationUnitCursor(tu)
 
 # helper
 """
-    parse_header(header::AbstractString; index::Index=Index(), args::Vector{String}=String[],
-                 includes::Vector{String}=String[], flags=CXTranslationUnit_None) -> TranslationUnit
+    parse_header(
+        header::AbstractString;
+        index::Index=Index(),
+        args::Vector{String}=String[],
+        includes::Vector{String}=String[],
+        flags=CXTranslationUnit_None
+    ) -> TranslationUnit
 Return the TranslationUnit for a given header. This is the main entry point for parsing.
 See also [`parse_headers`](@ref).
 
@@ -116,8 +121,14 @@ function parse_header(
 end
 
 """
-    parse_headers(headers::Vector{String}; index::Index=Index(), args::Vector{String}=String[], includes::Vector{String}=String[],
-        flags = CXTranslationUnit_DetailedPreprocessingRecord | CXTranslationUnit_SkipFunctionBodies) -> Vector{TranslationUnit}
+    parse_headers(
+        headers::Vector{String};
+        index::Index=Index(),
+        args::Vector{String}=String[],
+        includes::Vector{String}=String[],
+        flags = CXTranslationUnit_DetailedPreprocessingRecord |
+                CXTranslationUnit_SkipFunctionBodies
+    ) -> Vector{TranslationUnit}
 Return a [`TranslationUnit`](@ref) vector for the given headers. See also [`parse_header`](@ref).
 """
 function parse_headers(
