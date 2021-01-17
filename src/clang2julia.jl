@@ -89,7 +89,7 @@ Return field declaration size.
 typesize(t::CLType) = clang_Type_getSizeOf(t)
 typesize(t::CLTypedef) = typesize(typedecl(t))
 typesize(t::CLElaborated) = typesize(get_named_type(t))
-typesize(t::CLConstantArray) = element_num(t)
+typesize(t::CLConstantArray) = get_element_num(t)
 typesize(t::CLInvalid) = (@warn("  incorrect typesize for CXType_Invalid field"); 0)
 typesize(c::CLTypedefDecl) = typesize(underlying_type(c))
 
@@ -124,10 +124,10 @@ Pointers are translated to `Ptr`s.
 function clang2julia(t::CLPointer)
     # we firstly handle function pointers
     # if its canonical pointee type is CXType_FunctionProto, then it's a function pointer
-    kind(pointee_type(canonical(t))) == CXType_FunctionProto && return :(Ptr{Cvoid})
+    kind(get_pointee_type(canonical(t))) == CXType_FunctionProto && return :(Ptr{Cvoid})
     # then handle non-function pointers
     # to preserve readability, `canonical` should not be used here
-    ptree = pointee_type(t)
+    ptree = get_pointee_type(t)
     ptree_kind = kind(ptree)
     # TODO: add an option to let users decide the NUL-terminated string behavior
     (ptree_kind == CXType_Char_U || ptree_kind == CXType_Char_S) && return :Cstring
@@ -149,8 +149,8 @@ end
 `ConstantArray`s are translated to `NTuple`s.
 """
 function clang2julia(t::CLConstantArray)
-    arrsize = element_num(t)
-    eltype = clang2julia(element_type(t))
+    arrsize = get_element_num(t)
+    eltype = clang2julia(get_element_type(t))
     return :(NTuple{$arrsize,$eltype})
 end
 
@@ -158,7 +158,7 @@ end
     clang2julia(t::CLIncompleteArray)
 `IncompleteArray`s are translated to pointers, so one need to deal with the byte offsets directly.
 """
-clang2julia(t::CLIncompleteArray) = Expr(:curly, :Ptr, clang2julia(element_type(t)))
+clang2julia(t::CLIncompleteArray) = Expr(:curly, :Ptr, clang2julia(get_element_type(t)))
 
 """
     clang2julia(c::CLCursor) -> Symbol/Expr
@@ -169,10 +169,10 @@ clang2julia(c::CLUnionDecl) = clang2julia(largestfield(type(c)))
 clang2julia(c::CLEnumDecl) = clang2julia(integer_type(c))
 
 function clang2julia(c::CLTypeRef)
-    reftype = getref(c)
-    refdef = getdef(reftype)
+    reftype = get_reference(c)
+    refdef = get_definition(reftype)
     refdefKind = kind(refdef)
-    if isnull(refdef) ||
+    if is_null(refdef) ||
        refdefKind == CXCursor_InvalidFile ||
        refdefKind == CXCursor_FirstInvalid
         return :Cvoid

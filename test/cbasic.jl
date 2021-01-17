@@ -33,7 +33,7 @@ using Test
 
     # function arguments
     func1 = search(root_cursor, "func1")[1]
-    @test argnum(func1) == 4
+    @test get_argnum(func1) == 4
     func1_args = function_args(func1) # TODO should return a structure or namedtuple
     @test map(spelling, func1_args) == ["a", "b", "c", "d"]
     @test endswith(filename(func1), joinpath("c", "cbasic.h"))

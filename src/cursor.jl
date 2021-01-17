@@ -1,16 +1,16 @@
 """
-    isnull(c::Union{CXCursor,CLCursor}) -> Bool
+    is_null(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if cursor is null.
 Wrapper for libclang's `clang_Cursor_isNull`.
 """
-isnull(c::Union{CXCursor,CLCursor}) = clang_Cursor_isNull(c) != 0
+is_null(c::Union{CXCursor,CLCursor}) = clang_Cursor_isNull(c) != 0
 
 """
-    getcursor() -> (NULL)CXCursor
-Return the NULL CXCursor.
+    get_null_cursor() -> CXCursor
+Return the "NULL" CXCursor.
 Wrapper for libclang's `clang_getNullCursor`.
 """
-getcursor() = clang_getNullCursor()
+get_null_cursor() = clang_getNullCursor()
 
 # equality
 Base.:(==)(c1::CXCursor, c2::CXCursor)::Bool = clang_equalCursors(c1, c2)
@@ -32,67 +32,67 @@ Note this method directly reads CXCursor's `kind` field, which won't invoke addi
 kind(c::CLCursor) = c.cursor.kind
 
 """
-    isdecl(k::CXcursorKind) -> Bool
-    isdecl(c::CLCursor) -> Bool
+    is_decl(k::CXcursorKind) -> Bool
+    is_decl(c::CLCursor) -> Bool
 Return true if the given cursor kind represents a declaration.
 Wrapper for libclang's `clang_isDeclaration`.
 """
-isdecl(k::CXCursorKind)::Bool = clang_isDeclaration(k)
-isdecl(c::CLCursor) = isdecl(kind(c))
+is_decl(k::CXCursorKind)::Bool = clang_isDeclaration(k)
+is_decl(c::CLCursor) = is_decl(kind(c))
 
 """
-    isref(k::CXcursorKind) -> Bool
-    isref(c::CLCursor) -> Bool
+    is_ref(k::CXcursorKind) -> Bool
+    is_ref(c::CLCursor) -> Bool
 Return true if the given cursor kind represents a simple reference. Note that other kinds of
-cursors (such as expressions) can also refer to other cursors. Use [`getref`](@ref) to determine
+cursors (such as expressions) can also refer to other cursors. Use [`get_reference`](@ref) to determine
 whether a particular cursor refers to another entity.
 Wrapper for libclang's `clang_isReference`.
 """
-isref(k::CXCursorKind)::Bool = clang_isReference(k)
-isref(c::CLCursor) = isref(kind(c))
+is_ref(k::CXCursorKind)::Bool = clang_isReference(k)
+is_ref(c::CLCursor) = is_ref(kind(c))
 
 """
-    isexpr(k::CXcursorKind) -> Bool
-    isexpr(c::CLCursor) -> Bool
+    is_expr(k::CXcursorKind) -> Bool
+    is_expr(c::CLCursor) -> Bool
 Return true if the given cursor kind represents an expression.
 Wrapper for libclang's `clang_isExpression`.
 """
-isexpr(k::CXCursorKind)::Bool = clang_isExpression(k)
-isexpr(c::CLCursor) = isexpr(kind(c))
+is_expr(k::CXCursorKind)::Bool = clang_isExpression(k)
+is_expr(c::CLCursor) = is_expr(kind(c))
 
 """
-    isstmt(k::CXcursorKind) -> Bool
-    isstmt(c::CLCursor) -> Bool
+    is_stmt(k::CXcursorKind) -> Bool
+    is_stmt(c::CLCursor) -> Bool
 Return true if the given cursor kind represents a statement.
 Wrapper for libclang's `clang_isStatement`.
 """
-isstmt(k::CXCursorKind)::Bool = clang_isStatement(k)
-isstmt(c::CLCursor) = isstat(kind(c))
+is_stmt(k::CXCursorKind)::Bool = clang_isStatement(k)
+is_stmt(c::CLCursor) = isstat(kind(c))
 
 """
-    isattr(k::CXcursorKind) -> Bool
-    isattr(c::CLCursor) -> Bool
+    is_attr(k::CXcursorKind) -> Bool
+    is_attr(c::CLCursor) -> Bool
 Return true if the given cursor kind represents an attribute.
 Wrapper for libclang's `clang_isAttribute`.
 """
-isattr(k::CXCursorKind)::Bool = clang_isAttribute(k)
-isattr(c::CLCursor) = isattr(kind(c))
+is_attr(k::CXCursorKind)::Bool = clang_isAttribute(k)
+is_attr(c::CLCursor) = is_attr(kind(c))
 
 """
-    hasattr(c::Union{CXCursor,CLCursor}) -> Bool
+    has_attr(c::Union{CXCursor,CLCursor}) -> Bool
 Determine whether the given cursor has any attributes.
 Wrapper for libclang's `clang_Cursor_hasAttrs`.
 """
-hasattr(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_hasAttrs(c)
+has_attr(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_hasAttrs(c)
 
 """
-    isvalid(k::CXcursorKind) -> Bool
-    isvalid(c::CLCursor) -> Bool
+    is_valid(k::CXcursorKind) -> Bool
+    is_valid(c::CLCursor) -> Bool
 Return true if the given cursor kind represents an valid cursor.
 Wrapper for libclang's `clang_isInvalid`.
 """
-Base.isvalid(k::CXCursorKind) = !(Bool(clang_isInvalid(k)))
-Base.isvalid(c::CLCursor) = isvalid(kind(c))
+is_valid(k::CXCursorKind) = !(Bool(clang_isInvalid(k)))
+is_valid(c::CLCursor) = is_valid(kind(c))
 
 """
     is_translation_unit(k::CXcursorKind) -> Bool
@@ -104,37 +104,47 @@ is_translation_unit(k::CXCursorKind)::Bool = clang_isTranslationUnit(k)
 is_translation_unit(c::CLCursor) = is_translation_unit(kind(c))
 
 """
-    ispreprocessing(k::CXcursorKind) -> Bool
-    ispreprocessing(c::CLCursor) -> Bool
+    is_preprocessing(k::CXcursorKind) -> Bool
+    is_preprocessing(c::CLCursor) -> Bool
 Return true if the given cursor kind represents a preprocessing element, such as a
 preprocessor directive or macro instantiation.
 Wrapper for libclang's `clang_isPreprocessing`.
 """
-ispreprocessing(k::CXCursorKind)::Bool = clang_isPreprocessing(k)
-ispreprocessing(c::CLCursor) = ispreprocessing(kind(c))
+is_preprocessing(k::CXCursorKind)::Bool = clang_isPreprocessing(k)
+is_preprocessing(c::CLCursor) = is_preprocessing(kind(c))
 
 """
-    isunexposed(k::CXcursorKind) -> Bool
+    is_unexposed(k::CXcursorKind) -> Bool
 Return true if the given cursor kind represents a currently unexposed piece of the AST
 (e.g., CXCursor_UnexposedStmt).
 Wrapper for libclang's `clang_isUnexposed`.
 """
-isunexposed(k::CXCursorKind)::Bool = clang_isUnexposed(k)
-isunexposed(c::CLCursor) = isunexposed(kind(c))
+is_unexposed(k::CXCursorKind)::Bool = clang_isUnexposed(k)
+is_unexposed(c::CLCursor) = is_unexposed(kind(c))
 
 """
-    linkage(c::Union{CXCursor,CLCursor}) -> CXLinkageKind
+    get_linkage(c::Union{CXCursor,CLCursor}) -> CXLinkageKind
 Return the linkage of the entity referred to by a given cursor.
 Wrapper for libclang's `clang_getCursorLinkage`.
 """
-linkage(c::Union{CXCursor,CLCursor})::CXLinkageKind = clang_getCursorLinkage(c)
+get_linkage(c::Union{CXCursor,CLCursor})::CXLinkageKind = clang_getCursorLinkage(c)
 
 ## TODO:
 # clang_getCursorVisibility
 # clang_getCursorAvailability
 # clang_getCursorPlatformAvailability
 # clang_disposeCXPlatformAvailability
-# clang_getCursorLanguage
+
+"""
+    get_language(c::Union{CXCursor,CLCursor}) -> CXLanguageKind
+Return the language of the entity referred to by a given cursor.
+Return `CXLanguage_Invalid` if the input cursor is not a decl.
+Note that, this function has limitations, for example, it cannot distinguish C++ structs
+from C structs, in both cases, it returns `CXLanguage_C`.
+Wrapper for libclang's `clang_getCursorLanguage`.
+"""
+get_language(c::Union{CXCursor,CLCursor})::CXLanguageKind = clang_getCursorLanguage(c)
+
 # clang_getCursorTLSKind
 
 """
@@ -249,11 +259,11 @@ bitwidth(c::CXCursor)::Int = clang_getFieldDeclBitWidth(c)
 bitwidth(c::CLFieldDecl) = clang_getFieldDeclBitWidth(c)
 
 """
-    argnum(c::Union{CXCursor,CLFunctionDecl,CLCXXMethod}) -> Int
+    get_argnum(c::Union{CXCursor,CLFunctionDecl,CLCXXMethod}) -> Int
 Return the number of non-variadic arguments associated with a given cursor.
 Wrapper for libclang's `clang_Cursor_getNumArguments`.
 """
-argnum(c::Union{CXCursor,CLFunctionDecl,CLCXXMethod})::Int = clang_Cursor_getNumArguments(c)
+get_argnum(c::Union{CXCursor,CLFunctionDecl,CLCXXMethod})::Int = clang_Cursor_getNumArguments(c)
 
 """
     argument(c::CXCursor, i::Integer) -> CXCursor
@@ -273,35 +283,35 @@ argument(c::Union{CLFunctionDecl,CLCXXMethod}, i::Integer)::CLCursor =
 # clang_Cursor_getTemplateArgumentUnsignedValue
 
 """
-    isfunctionlike(c::Union{CXCursor,CLCursor}) -> Bool
+    is_functionlike(c::Union{CXCursor,CLCursor}) -> Bool
 Determine whether a CXCursor that is a macro, is function like.
 Wrapper for libclang's `clang_Cursor_isMacroFunctionLike`.
 """
-isfunctionlike(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isMacroFunctionLike(c)
+is_functionlike(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isMacroFunctionLike(c)
 
 """
-    isbuiltin(c::Union{CXCursor,CLCursor}) -> Bool
+    is_builtin(c::Union{CXCursor,CLCursor}) -> Bool
 Determine whether a  CXCursor that is a macro, is a builtin one.
 Wrapper for libclang's `clang_Cursor_isMacroBuiltin`.
 """
-isbuiltin(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isMacroBuiltin(c)
+is_builtin(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isMacroBuiltin(c)
 
 """
-    isinlined(c::Union{CXCursor,CLCursor}) -> Bool
+    is_inlined(c::Union{CXCursor,CLCursor}) -> Bool
 Determine whether a CXCursor that is a function declaration, is an inline declaration.
 Wrapper for libclang's `clang_Cursor_isFunctionInlined`.
 """
-isinlined(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isFunctionInlined(c)
+is_inlined(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isFunctionInlined(c)
 
 """
-    result_type(c::CXCursor) -> CXType
-    result_type(c::Union{CLFunctionDecl,CLCXXMethod}) -> CLType
+    get_result_type(c::CXCursor) -> CXType
+    get_result_type(c::Union{CLFunctionDecl,CLCXXMethod}) -> CLType
 Return the return type associated with a given cursor. This only returns a valid type if
 the cursor refers to a function or method.
 Wrapper for libclang's `clang_getCursorResultType`.
 """
-result_type(c::CXCursor) = clang_getCursorResultType(c)
-result_type(c::Union{CLFunctionDecl,CLCXXMethod})::CLType = clang_getCursorResultType(c)
+get_result_type(c::CXCursor) = clang_getCursorResultType(c)
+get_result_type(c::Union{CLFunctionDecl,CLCXXMethod})::CLType = clang_getCursorResultType(c)
 
 ## TODO:
 # clang_getCursorExceptionSpecificationType
@@ -309,25 +319,25 @@ result_type(c::Union{CLFunctionDecl,CLCXXMethod})::CLType = clang_getCursorResul
 #
 
 """
-    isanonymous(c::Union{CXCursor,CLCursor}) -> Bool
+    is_anonymous(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if the given cursor represents an anonymous record declaration(C++).
 Wrapper for libclang's `clang_Cursor_isAnonymous`.
 """
-isanonymous(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isAnonymous(c)
+is_anonymous(c::Union{CXCursor,CLCursor})::Bool = clang_Cursor_isAnonymous(c)
 
 """
-    isbit(c::Union{CXCursor,CLCursor}) -> Bool
+    is_bitfield(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if the cursor specifies a Record member that is a bitfield.
 Wrapper for libclang's `clang_Cursor_isBitField`.
 """
-isbit(c::Union{CXCursor,CLCursor}) = clang_Cursor_isBitField(c) != 0
+is_bitfield(c::Union{CXCursor,CLCursor}) = clang_Cursor_isBitField(c) != 0
 
 """
-    isvirtual(c::Union{CXCursor,CLCursor}) -> Bool
+    is_virtual_base(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if the base class specified by the cursor with kind CX_CXXBaseSpecifier is virtual.
 Wrapper for libclang's `clang_isVirtualBase`.
 """
-isvirtual(c::Union{CXCursor,CLCursor})::Bool = clang_isVirtualBase(c)
+is_virtual_base(c::Union{CXCursor,CLCursor})::Bool = clang_isVirtualBase(c)
 
 ## TODO:
 # clang_getCXXAccessSpecifier
@@ -364,30 +374,30 @@ function name(c::Union{CXCursor,CLCursor})
 end
 
 """
-    getref(c::CXCursor) -> CXCursor
-    getref(c::CLCursor) -> CLCursor
+    get_reference(c::CXCursor) -> CXCursor
+    get_reference(c::CLCursor) -> CLCursor
 For a cursor that is a reference, retrieve a cursor representing the entity that it references.
 Wrapper for libclang's `clang_getCursorReferenced`.
 """
-getref(c::CXCursor) = clang_getCursorReferenced(c)
-getref(c::CLCursor)::CLCursor = clang_getCursorReferenced(c)
+get_reference(c::CXCursor) = clang_getCursorReferenced(c)
+get_reference(c::CLCursor)::CLCursor = clang_getCursorReferenced(c)
 
 """
-    getdef(c::CXCursor) -> CXCursor
-    getdef(c::CLCursor) -> CLCursor
+    get_definition(c::CXCursor) -> CXCursor
+    get_definition(c::CLCursor) -> CLCursor
 For a cursor that is either a reference to or a declaration of some entity, retrieve a cursor
 that describes the definition of that entity.
 Wrapper for libclang's `clang_getCursorDefinition`.
 """
-getdef(c::CXCursor) = clang_getCursorDefinition(c)
-getdef(c::CLCursor)::CLCursor = clang_getCursorDefinition(c)
+get_definition(c::CXCursor) = clang_getCursorDefinition(c)
+get_definition(c::CLCursor)::CLCursor = clang_getCursorDefinition(c)
 
 """
-    isdef(c::Union{CXCursor,CLCursor}) -> Bool
+    is_definition(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if the declaration pointed to by this cursor is also a definition of that entity.
 Wrapper for libclang's `clang_isCursorDefinition`.
 """
-isdef(c::Union{CXCursor,CLCursor})::Bool = clang_isCursorDefinition(c)
+is_definition(c::Union{CXCursor,CLCursor})::Bool = clang_isCursorDefinition(c)
 
 """
     canonical(c::CXCursor) -> CXCursor
@@ -404,11 +414,11 @@ canonical(c::CLCursor)::CLCursor = clang_getCanonicalCursor(c)
 # clang_Cursor_getReceiverType
 
 """
-    isvariadic(c::Union{CXCursor,CLCursor}) -> Bool
+    is_variadic(c::Union{CXCursor,CLCursor}) -> Bool
 Return true if the given cursor is a variadic function or method.
 Wrapper for libclang's `clang_Cursor_isVariadic`.
 """
-isvariadic(c::Union{CXCursor,CLCursor}) = clang_Cursor_isVariadic(c) != 0
+is_variadic(c::Union{CXCursor,CLCursor}) = clang_Cursor_isVariadic(c) != 0
 
 # clang_Cursor_isExternalSymbol
 # clang_Cursor_getCommentRange
@@ -447,11 +457,11 @@ function filename(c::Union{CXCursor,CLCursor})
 end
 
 """
-    return_type(c::CLCursor, resolve::Bool=true) -> CXtype
+    return_type(c::CLCursor, resolve::Bool=true) -> CXType
 Return the return type associated with a function/method cursor.
 """
 function return_type(c::CLCursor, resolve::Bool=true)
-    t = result_type(c)
+    t = get_result_type(c)
     resolve && return resolve_type(t)
     return t
 end
@@ -490,7 +500,7 @@ end
 """
     children(cursor::CXCursor) -> Vector{CXCursor}
     children(cursor::CLCursor) -> Vector{CLCursor}
-Return a child cursor vector of the given cursor.
+Return immediate cursors of the given cursor.
 """
 function children(cursor::CXCursor)
     # TODO: possible to use sizehint! here?

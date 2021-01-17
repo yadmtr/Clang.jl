@@ -14,28 +14,28 @@ canonical(t::CXType) = clang_getCanonicalType(t)
 canonical(t::CLType)::CLType = clang_getCanonicalType(t)
 
 """
-    isconst(t::Union{CXType,CLType}) -> Bool
+    is_const(t::Union{CXType,CLType}) -> Bool
 Determine whether a CXType has the "const" qualifier set, without looking through typedefs
 that may have added "const" at a different level.
 Wrapper for libclang's `clang_isConstQualifiedType`.
 """
-Base.isconst(t::Union{CXType,CLType})::Bool = clang_isConstQualifiedType(t)
+is_const(t::Union{CXType,CLType})::Bool = clang_isConstQualifiedType(t)
 
 """
-    isvolatile(t::Union{CXType,CLType}) -> Bool
+    is_volatile(t::Union{CXType,CLType}) -> Bool
 Determine whether a CXType has the "volatile" qualifier set, without looking through typedefs
 that may have added "volatile" at a different level.
 Wrapper for libclang's `clang_isVolatileQualifiedType`.
 """
-isvolatile(t::CXType)::Bool = clang_isVolatileQualifiedType(t)
+is_volatile(t::CXType)::Bool = clang_isVolatileQualifiedType(t)
 
 """
-    isrestrict(t::Union{CXType,CLType}) -> Bool
+    is_restrict(t::Union{CXType,CLType}) -> Bool
 Determine whether a CXType has the "restrict" qualifier set, without looking through typedefs
 that may have added "restrict" at a different level.
 Wrapper for libclang's `clang_isRestrictQualifiedType`.
 """
-isrestrict(t::Union{CXType,CLType})::Bool = clang_isRestrictQualifiedType(t)
+is_restrict(t::Union{CXType,CLType})::Bool = clang_isRestrictQualifiedType(t)
 
 """
     address_space(t::Union{CXType,CLType})
@@ -58,13 +58,13 @@ function typedef_name(t::Union{CXType,CLType})
 end
 
 """
-    pointee_type(t::CXType) -> CXType
-    pointee_type(t::CLType) -> CLType
+    get_pointee_type(t::CXType) -> CXType
+    get_pointee_type(t::CLType) -> CLType
 Return the type of the pointee for pointer types.
 Wrapper for libclang's `clang_getPointeeType`.
 """
-pointee_type(t::CXType) = clang_getPointeeType(t)
-pointee_type(t::CLType)::CLType = clang_getPointeeType(t)
+get_pointee_type(t::CXType) = clang_getPointeeType(t)
+get_pointee_type(t::CLType)::CLType = clang_getPointeeType(t)
 
 """
     typedecl(t::CXType) -> CXCursor
@@ -102,46 +102,46 @@ function spelling(kind::CXTypeKind)
 end
 
 """
-    calling_conv(t::Union{CXType,CLFunctionNoProto,CLFunctionProto}) -> CXCallingConv
+    get_calling_conv(t::Union{CXType,CLFunctionNoProto,CLFunctionProto}) -> CXCallingConv
 Return the calling convention associated with a function type.
 Wrapper for libclang's `clang_getFunctionTypeCallingConv`.
 """
-calling_conv(t::Union{CXType,CLFunctionNoProto,CLFunctionProto})::CXCallingConv = clang_getFunctionTypeCallingConv(t)
+get_calling_conv(t::Union{CXType,CLFunctionNoProto,CLFunctionProto})::CXCallingConv = clang_getFunctionTypeCallingConv(t)
 
 """
-    result_type(t::CXType) -> CXType
-    result_type(t::Union{CLFunctionNoProto,CLFunctionProto}) -> CLType
+    get_result_type(t::CXType) -> CXType
+    get_result_type(t::Union{CLFunctionNoProto,CLFunctionProto}) -> CLType
 Return the return type associated with a function type.
 Wrapper for libclang's `clang_getResultType`.
 """
-result_type(t::CXType) = clang_getResultType(t)
-result_type(t::Union{CLFunctionNoProto,CLFunctionProto})::CLType = clang_getResultType(t)
+get_result_type(t::CXType) = clang_getResultType(t)
+get_result_type(t::Union{CLFunctionNoProto,CLFunctionProto})::CLType = clang_getResultType(t)
 
 ## TODO:
 # clang_getExceptionSpecificationType
 
 """
-    argnum(t::Union{CXType,CLFunctionNoProto,CLFunctionProto}) -> Int
+    get_argnum(t::Union{CXType,CLFunctionNoProto,CLFunctionProto}) -> Int
 Return the number of non-variadic parameters associated with a function type.
 Wrapper for libclang's `clang_getNumArgTypes`.
 """
-argnum(t::Union{CXType,CLFunctionNoProto,CLFunctionProto,CLUnexposed})::Int = clang_getNumArgTypes(t)
+get_argnum(t::Union{CXType,CLFunctionNoProto,CLFunctionProto,CLUnexposed})::Int = clang_getNumArgTypes(t)
 
 """
-    argtype(t::CXType, i::Unsigned) -> CXType
-    argtype(t::Union{CLFunctionNoProto,CLFunctionProto}, i::Integer) -> CLType
+    get_argtype(t::CXType, i::Unsigned) -> CXType
+    get_argtype(t::Union{CLFunctionNoProto,CLFunctionProto}, i::Integer) -> CLType
 Return the type of a parameter of a function type.
 Wrapper for libclang's `clang_getArgType`.
 """
-argtype(t::CXType, i::Unsigned) = clang_getArgType(t, Unsigned(i))
-argtype(t::Union{CLFunctionNoProto,CLFunctionProto,CLUnexposed}, i::Integer)::CLType = argtype(t.type, Unsigned(i))
+get_argtype(t::CXType, i::Unsigned) = clang_getArgType(t, Unsigned(i))
+get_argtype(t::Union{CLFunctionNoProto,CLFunctionProto,CLUnexposed}, i::Integer)::CLType = get_argtype(t.type, Unsigned(i))
 
 """
-    isvariadic(t::Union{CXType,CLType}) -> Bool
+    is_variadic(t::Union{CXType,CLType}) -> Bool
 Return true if the CXType is a variadic function type.
 Wrapper for libclang's `clang_isFunctionTypeVariadic`.
 """
-isvariadic(t::Union{CXType,CLType})::Bool = clang_isFunctionTypeVariadic(t)
+is_variadic(t::Union{CXType,CLType})::Bool = clang_isFunctionTypeVariadic(t)
 
 """
     is_plain_old_data(t::Union{CXType,CLType}) -> Bool
@@ -151,21 +151,21 @@ Wrapper for libclang's `clang_isPODType`.
 is_plain_old_data(t::CXType)::Bool = clang_isPODType(t)
 
 """
-    element_type(t::CXType) -> CXType
-    element_type(t::Union{CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray,CLComplex}) -> CLType
+    get_element_type(t::CXType) -> CXType
+    get_element_type(t::Union{CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray,CLComplex}) -> CLType
 Return the element type of an array, complex, or vector type.
 Wrapper for libclang's `clang_getElementType`.
 """
-element_type(t::CXType) = clang_getElementType(t)
-element_type(t::Union{CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray,CLComplex})::CLType = clang_getElementType(t)
+get_element_type(t::CXType) = clang_getElementType(t)
+get_element_type(t::Union{CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray,CLComplex})::CLType = clang_getElementType(t)
 # old API: clang_getArrayElementType
 
 """
-    element_num(t::Union{CXType,CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray}) -> Int
+    get_element_num(t::Union{CXType,CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray}) -> Int
 Return the number of elements of an array or vector type.
 Wrapper for libclang's `clang_getNumElements`.
 """
-element_num(t::Union{CXType,CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray})::Int = clang_getNumElements(t)
+get_element_num(t::Union{CXType,CLVector,CLConstantArray,CLIncompleteArray,CLVariableArray,CLDependentSizedArray})::Int = clang_getNumElements(t)
 # old API: clang_getArraySize
 
 """
@@ -198,12 +198,12 @@ kind(t::CXType) = t.kind
 kind(t::CLType) = kind(t.type)
 
 """
-    isvalid(t::CXType) -> Bool
-    isvalid(t::CLType) -> Bool
+    is_valid(t::CXType) -> Bool
+    is_valid(t::CLType) -> Bool
 Return true if the type is a valid type.
 """
-isvalid(t::CXType) = kind(t) != CXType_Invalid
-isvalid(t::CLType) = isvalid(t.type)
+is_valid(t::CXType) = kind(t) != CXType_Invalid
+is_valid(t::CLType) = is_valid(t.type)
 
 """
     resolve_type(t::CLType) -> CLType
@@ -213,7 +213,7 @@ function resolve_type(t::CLType)::CLType
     if kind(t) == CXType_Unexposed
         # try to resolve Unexposed type to cursor definition.
         cursor = typedecl(t)
-        if !isnull(cursor) && kind(cursor) != CXCursor_NoDeclFound
+        if !is_null(cursor) && kind(cursor) != CXCursor_NoDeclFound
             return type(cursor)
         end
     end

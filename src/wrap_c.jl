@@ -11,7 +11,7 @@ function wrap!(ctx::AbstractContext, cursor::CLFunctionDecl)
     func_type = type(cursor)
     if kind(func_type) == CXType_FunctionNoProto
         @warn "No Prototype for $cursor - assuming no arguments"
-    elseif isvariadic(func_type)
+    elseif is_variadic(func_type)
         @warn "Skipping VarArg Function $cursor"
         return ctx
     end
@@ -19,7 +19,7 @@ function wrap!(ctx::AbstractContext, cursor::CLFunctionDecl)
     func_name = isempty(ctx.force_name) ? Symbol(spelling(cursor)) : ctx.force_name
     ret_type = clang2julia(return_type(cursor))
     args = function_args(cursor)
-    arg_types = [argtype(func_type, i) for i in 0:(length(args) - 1)]
+    arg_types = [get_argtype(func_type, i) for i in 0:(length(args) - 1)]
     # if argtypes contains any ObjectveC's block pointer, then skip this function
     for at in arg_types
         if kind(canonical(at)) == CXType_BlockPointer
@@ -504,7 +504,7 @@ Subroutine for handling macro declarations.
 """
 function wrap!(ctx::AbstractContext, cursor::CLMacroDefinition)
     # skip built-in macros
-    isbuiltin(cursor) && return ctx
+    is_builtin(cursor) && return ctx
 
     tokens = tokenize(cursor)
     buffer = ctx.common_buffer
@@ -514,7 +514,7 @@ function wrap!(ctx::AbstractContext, cursor::CLMacroDefinition)
         return ctx
     end
 
-    if isfunctionlike(cursor)
+    if is_functionlike(cursor)
         toks = collect(tokens)
         lhs_sym = symbol_safe(tokens[1].text)
         i = findfirst(x->x.text == ")", toks)

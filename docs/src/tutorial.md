@@ -174,7 +174,7 @@ julia> [type(t) for t in fdecl_children[1:3]]
 ```
 And, finally, retrieving the target type of each `CLPointer` argument confirms that these cursors represent the function argument type declaration:
 ```julia
-julia> [pointee_type(type(t)) for t in fdecl_children[2:3]]
+julia> [get_pointee_type(type(t)) for t in fdecl_children[2:3]]
 2-element Array{CLType,1}:
  CLType (CLChar_S)
  CLType (CLFloat)  
@@ -188,7 +188,7 @@ printind(ind::Int, st...) = println(join([repeat(" ", 2*ind), st...]))
 printobj(cursor::CLCursor) = printobj(0, cursor)
 printobj(t::CLType) = join(typeof(t), " ", spelling(t))
 printobj(t::CLInt) = t
-printobj(t::CLPointer) = pointee_type(t)
+printobj(t::CLPointer) = get_pointee_type(t)
 printobj(ind::Int, t::CLType) = printind(ind, printobj(t))
 
 function printobj(ind::Int, cursor::Union{CLFieldDecl, CLParmDecl})

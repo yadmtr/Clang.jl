@@ -24,7 +24,7 @@ printind(ind::Int, st...) = println(join([repeat(" ", 2 * ind), st...]))
 
 dumpobj(cursor::CLCursor) = dumpobj(0, cursor)
 dumpobj(t::CLType) = "a " * string(typeof(t)) * " " * spelling(t)
-dumpobj(t::CLPointer) = "a pointer to `" * string(pointee_type(t)) * "`"
+dumpobj(t::CLPointer) = "a pointer to `" * string(get_pointee_type(t)) * "`"
 dumpobj(ind::Int, t::CLType) = printind(ind, dumpobj(t))
 
 function dumpobj(ind::Int, cursor::Union{CLParmDecl,CLFieldDecl})

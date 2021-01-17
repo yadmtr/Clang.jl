@@ -21,20 +21,20 @@ include("trans_unit.jl")
 export TranslationUnit, spelling, getcursor, parse_header, parse_headers
 
 include("cursor.jl")
-export isnull, isdecl, isref, isexpr, isstmt, isattr, hasattr
-export ispreprocessing, isunexposed, is_translation_unit, isfunctionlike, isbuiltin
-export isinlined, isbit, isdef, isvariadic, is_typedef_anon
+export is_null, is_decl, is_ref, is_expr, is_stmt, is_attr, has_attr
+export is_preprocessing, is_unexposed, is_translation_unit, is_functionlike, is_builtin
+export is_inlined, is_bitfield, is_definition, is_variadic, is_typedef_anon
 export get_translation_unit, get_semantic_parent, get_lexical_parent, get_included_file
-export getref, getdef
+export get_reference, get_definition, get_language
 export kind, name, spelling, type, extent, value, location, filename
-export canonical, underlying_type, integer_type, result_type, return_type, typedef_type
-export bitwidth, argnum, argument, function_args
+export canonical, underlying_type, integer_type, get_result_type, return_type, typedef_type
+export bitwidth, get_argnum, argument, function_args
 export search, children
 
 include("type.jl")
-export isvolatile, isrestrict, isvariadic, is_plain_old_data
+export is_volatile, is_restrict, is_variadic, is_plain_old_data
 export address_space, typedef_name, typedecl
-export pointee_type, argtype, element_type, element_num
+export get_pointee_type, get_argtype, get_element_type, get_element_num
 export resolve_type, get_named_type
 export fields
 
