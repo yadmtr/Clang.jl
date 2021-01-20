@@ -64,18 +64,18 @@ spelling(tu::TranslationUnit, t::CXToken) = spelling(tu.ptr, t)
 spelling(tu::TranslationUnit, t::CLToken) = spelling(tu.ptr, t.token)
 
 """
-    location(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken}) -> CXSourceLocation
+    get_location(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken}) -> CXSourceLocation
 Return the source location of the given token.
 """
-function location(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken})
+function get_location(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken})
     return clang_getTokenLocation(tu, t)
 end
 
 """
-    extent(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken}) -> CXSourceRange
+    get_extent(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken}) -> CXSourceRange
 Return a source range that covers the given token.
 """
-function extent(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken})
+function get_extent(tu::Union{CXTranslationUnit,TranslationUnit}, t::Union{CXToken,CLToken})
     return clang_getTokenExtent(tu, t)
 end
 

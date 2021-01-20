@@ -26,7 +26,8 @@ export is_preprocessing, is_unexposed, is_translation_unit, is_functionlike, is_
 export is_inlined, is_bitfield, is_definition, is_variadic, is_typedef_anon
 export get_translation_unit, get_semantic_parent, get_lexical_parent, get_included_file
 export get_reference, get_definition, get_language
-export kind, name, spelling, type, extent, value, location, filename
+export kind, name, spelling, type, get_extent, value, get_location
+export filename, get_file_line_column
 export canonical, underlying_type, integer_type, get_result_type, return_type, typedef_type
 export bitwidth, get_argnum, argument, function_args
 export search, children
@@ -53,8 +54,11 @@ export clang2julia, target_type, typesize
 include("expr_unit.jl")
 export ExprUnit, dump_to_buffer, print_buffer
 
+include("DAG/ExprDAGs.jl")
+using .ExprDAGs
+
 include("context.jl")
-export AbstractContext, DefaultContext
+export AbstractContext, DefaultContext, Context
 export parse_header!, parse_headers!
 
 include("wrap_c.jl")

@@ -30,6 +30,14 @@ function DefaultContext(index::Index)
 end
 DefaultContext(diagnostic::Bool=true) = DefaultContext(Index(diagnostic))
 
+mutable struct Context <: AbstractContext
+    index::Index
+    trans_units::Vector{TranslationUnit}
+    dag::ExprDAG
+end
+Context(index::Index) = Context(index, TranslationUnit[], ExprDAG(ExprNode[]))
+Context(diagnostic::Bool=true) = Context(Index(diagnostic))
+
 function parse_header!(ctx::AbstractContext, header::AbstractString; args...)
     return push!(ctx.trans_units, parse_header(header; args...))
 end

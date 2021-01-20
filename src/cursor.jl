@@ -6,11 +6,11 @@ Wrapper for libclang's `clang_Cursor_isNull`.
 is_null(c::Union{CXCursor,CLCursor}) = clang_Cursor_isNull(c) != 0
 
 """
-    get_null_cursor() -> CXCursor
+    null_cursor() -> CXCursor
 Return the "NULL" CXCursor.
 Wrapper for libclang's `clang_getNullCursor`.
 """
-get_null_cursor() = clang_getNullCursor()
+null_cursor() = clang_getNullCursor()
 
 # equality
 Base.:(==)(c1::CXCursor, c2::CXCursor)::Bool = clang_equalCursors(c1, c2)
@@ -190,14 +190,14 @@ Wrapper for libclang's `clang_getIncludedFile`.
 get_included_file(c::Union{CXCursor,CLCursor}) = clang_getIncludedFile(c)
 
 """
-    location(c::Union{CXCursor,CLCursor}) -> CXSourceLocation
+    get_location(c::Union{CXCursor,CLCursor}) -> CXSourceLocation
 Return the physical location of the source constructor referenced by the given cursor.
 Wrapper for libclang's `clang_getCursorLocation`.
 """
-location(c::Union{CXCursor,CLCursor}) = clang_getCursorLocation(c)
+get_location(c::Union{CXCursor,CLCursor}) = clang_getCursorLocation(c)
 
 """
-    extent(c::Union{CXCursor,CLCursor}) -> CXSourceRange
+    get_extent(c::Union{CXCursor,CLCursor}) -> CXSourceRange
 Return the physical extent of the source construct referenced by the given cursor.
 
 The extent of a cursor starts with the file/line/column pointing at the first character
@@ -207,7 +207,7 @@ For a reference, the extent covers the location of the reference (e.g., where th
 entity was actually used).
 Wrapper for libclang's `clang_getCursorExtent`.
 """
-extent(c::Union{CXCursor,CLCursor}) = clang_getCursorExtent(c)
+get_extent(c::Union{CXCursor,CLCursor}) = clang_getCursorExtent(c)
 
 """
     type(c::CXCursor) -> CXType
@@ -440,6 +440,25 @@ Return the complete file and path name of the given file referenced by the input
 """
 function filename(c::Union{CXCursor,CLCursor})
     file = Ref{CXFile}(C_NULL)
+    location = clang_getCursorLocation(c)
+    clang_getExpansionLocation(location, file, Ref{Cuint}(0), Ref{Cuint}(0), Ref{Cuint}(0))
+    if file[] != C_NULL
+        cxstr = clang_getFileName(file[])
+        ptr = clang_getCString(cxstr)
+        s = unsafe_string(ptr)
+        clang_disposeString(cxstr)
+        return s
+    else
+        return ""
+    end
+end
+
+"""
+    get_file_line_column(c::Union{CXCursor,CLCursor}) -> (String, Int, Int)
+Return file name, line and column number.
+"""
+function get_file_line_column(c::Union{CXCursor,CLCursor})
+    file = Ref{CXFile}(C_NULL)
     line = Ref{Cuint}(0)
     column = Ref{Cuint}(0)
     offset = Ref{Cuint}(0)
@@ -450,9 +469,9 @@ function filename(c::Union{CXCursor,CLCursor})
         ptr = clang_getCString(cxstr)
         s = unsafe_string(ptr)
         clang_disposeString(cxstr)
-        return s
+        return s, Int(line[]), Int(column[])
     else
-        return ""
+        return "", 0, 0
     end
 end
 
