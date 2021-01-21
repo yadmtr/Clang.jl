@@ -23,7 +23,7 @@ export TranslationUnit, spelling, getcursor, parse_header, parse_headers
 include("cursor.jl")
 export is_null, is_decl, is_ref, is_expr, is_stmt, is_attr, has_attr
 export is_preprocessing, is_unexposed, is_translation_unit, is_functionlike, is_builtin
-export is_inlined, is_bitfield, is_definition, is_variadic, is_typedef_anon
+export is_inlined, is_bitfield, is_definition, is_variadic, is_typedef_anon, is_forward_declaration
 export get_translation_unit, get_semantic_parent, get_lexical_parent, get_included_file
 export get_reference, get_definition, get_language
 export kind, name, spelling, type, get_extent, value, get_location

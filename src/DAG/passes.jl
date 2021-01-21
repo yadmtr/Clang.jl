@@ -67,3 +67,8 @@ function (x::ReduceTypedefAnonymousTagType)(dag::ExprDAG)
     filter!(!is_removable, dag.nodes)
     return dag
 end
+
+mutable struct ReduceTypedefAnonymousTagType <: AbstractPass
+    show_info::Bool
+end
+ReduceTypedefAnonymousTagType() = ReduceTypedefAnonymousTagType(false)

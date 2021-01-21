@@ -547,7 +547,7 @@ function_args(cursor::CLCursor) = search(cursor, CXCursor_ParmDecl)
 
 """
     is_typedef_anon(current::CLCursor, next::CLCursor) -> Bool
-Return true if the current cursor is an typedef anonymous struct/enum.
+Return true if the current cursor is a typedef anonymous struct/enum.
 """
 function is_typedef_anon(current::CLCursor, next::CLCursor)
     !isempty(name(current)) && return false
@@ -557,4 +557,15 @@ function is_typedef_anon(current::CLCursor, next::CLCursor)
     else
         return false
     end
+end
+
+"""
+    is_forward_declaration(x::CLCursor) -> Bool
+Return true if the cursor is a forward declaration.
+Reference: https://joshpeterson.github.io/identifying-a-forward-declaration-with-libclang
+"""
+function is_forward_declaration(x::CLCursor)
+    def = get_definition(x)
+    def == null_cursor() && return true
+    return !(x == def)
 end

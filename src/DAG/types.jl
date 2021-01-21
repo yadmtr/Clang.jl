@@ -39,6 +39,7 @@ struct MacroDefault <: AbstractMacroNodeType end
 abstract type AbstractStructNodeType <: AbstractExprNodeType end
 
 struct StructAnonymous <: AbstractStructNodeType end
+struct StructForwardDecl <: AbstractStructNodeType end
 struct StructDefault <: AbstractStructNodeType end
 
 """
@@ -47,6 +48,7 @@ struct StructDefault <: AbstractStructNodeType end
 abstract type AbstractUnionNodeType <: AbstractExprNodeType end
 
 struct UnionAnonymous <: AbstractUnionNodeType end
+struct UnionForwardDecl <: AbstractUnionNodeType end
 struct UnionDefault <: AbstractUnionNodeType end
 
 """
@@ -55,6 +57,7 @@ struct UnionDefault <: AbstractUnionNodeType end
 abstract type AbstractEnumNodeType <: AbstractExprNodeType end
 
 struct EnumAnonymous <: AbstractEnumNodeType end
+struct EnumForwardDecl <: AbstractEnumNodeType end
 struct EnumDefault <: AbstractEnumNodeType end
 
 
